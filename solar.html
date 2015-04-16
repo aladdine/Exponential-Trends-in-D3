@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    
+    <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+    
+    
+  </head>
+
+  <body>
+    <h3> Exponential Trends: <em> Cumulative PV Installation between 1992 and 2014 <em></h3>
+    
+ 
+<div id="chart"> </div>
+
+   <script> 
+    var installed_capacity=[105, 130, 158, 192, 309, 422, 566, 807, 1250, 1615, 2069,2635, 3723,
+5112, 6660, 9183, 15844, 23185, 40336, 70469, 100504, 138856, 177000];
+    
+    var height = 400,
+    width = 600,
+    barWidth = 50,
+    barOffset = 5,
+    vPadding = 10;
+    
+    var colors =  d3.scale.linear()
+                 .domain([0, d3.max(installed_capacity)])
+                 .range(['#ECECEC', '#000000']);
+   
+    var yScale = d3.scale.linear()
+                 .domain([0, d3.max(installed_capacity)])
+                 .range([0, height - vPadding]);
+                 
+    var xScale = d3.scale.ordinal()
+                 .domain(d3.range(0, installed_capacity.length))
+                 .rangeBands([vPadding, width - vPadding]);             
+                 
+    d3.select('#chart')
+   .append('svg')
+   .attr('width', width)
+   .attr('height', height)
+   .style('background', '#FFFFFF')
+   .selectAll('rect').data(installed_capacity)
+   .enter().append('rect')
+   .attr('width', (xScale.rangeBand() - 2 * barOffset))
+   .attr('height', function(d) { return yScale(d);})
+   .style('fill', function(d){ return colors(d);})
+   .attr('x', function (d,i){
+     return xScale(i);
+   })
+   .attr('y', function (d,i){
+     return (height - yScale(d));
+   });
+    </script>
+    
+   
+  </body>
+
+</html>
+
+
+
