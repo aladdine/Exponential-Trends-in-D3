@@ -26,17 +26,17 @@
     
     var colors =  d3.scale.linear()
                  .domain([0, d3.max(installed_capacity)])
-                 .range(['#ECECEC', '#000000']);
+                 .range(['green', 'red']);
    
     var yScale = d3.scale.linear()
                  .domain([0, d3.max(installed_capacity)])
-                 .range([0, height - vPadding]);
+                 .range([0, height - 10 * vPadding]);
                  
     var xScale = d3.scale.ordinal()
                  .domain(d3.range(0, installed_capacity.length))
                  .rangeBands([vPadding, width - vPadding]);             
                  
-    d3.select('#chart')
+    var myChart = d3.select('#chart')
    .append('svg')
    .attr('width', width)
    .attr('height', height)
@@ -44,20 +44,42 @@
    .selectAll('rect').data(installed_capacity)
    .enter().append('rect')
    .attr('width', (xScale.rangeBand() - 2 * barOffset))
-   .attr('height', function(d) { return yScale(d);})
+   .attr('height', 0)
    .style('fill', function(d){ return colors(d);})
    .attr('x', function (d,i){
      return xScale(i);
    })
-   .attr('y', function (d,i){
-     return (height - yScale(d));
+   .attr('y', height)
+   .on('mouseover', function(d) {
+    tempColor = this.style.fill;
+d3.select(this)
+  .transition()
+  .delay(20)
+  .duration(800)
+  .style('opacity', 0.5)
+  .style('fill', 'red') 
+})
+   .on('mouseout', function(d) {
+d3.select(this)
+  .transition()
+  .style('opacity', 1)
+  .style('fill', tempColor) 
+
    });
+
+   myChart.transition()
+          .attr('height', function(d) { return yScale(d);})
+          .attr('y', function (d,i){
+                   return (height - yScale(d));
+                })
+          .delay(function(d, i) {
+            return i * 20; 
+          })
+          .duration(3000)
+          .ease('elastic');
     </script>
     
    
   </body>
 
 </html>
-
-
-
